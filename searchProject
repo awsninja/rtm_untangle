@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#-l only file names
+#H prin the filename of each match
+#-r  recursive
+#--include filename match
+
+#echo "$#"
+#echo "arugments"
+
+#grep -H -r -l --include=*"$2" "$1" .
+#export GREP_OPTIONS='--exclude-dir=.svn'
+grep -H -r -l --exclude-dir=".svn" --exclude=*.{svn\-base,tmp} --include=*"$2" "$1" .
+

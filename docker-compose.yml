@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  untangle-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: untangle:latest
+    restart: always
