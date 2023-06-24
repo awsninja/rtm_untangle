@@ -14,7 +14,7 @@ RUN  apt-get update \
  && rm -rf /var/lib/apt/lists/* 
 
 
-COPY ./..env ./
+COPY ./.env ./
 COPY ./*.py ./
 COPY ./requirements.txt ./
 RUN mkdir scripts
