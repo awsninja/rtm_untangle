@@ -1,10 +1,9 @@
 from rtm import RTM
 from untangle import Untangle
 from dotenv import load_dotenv
-
+import os
 import logging
-
-
+from datetime import datetime
 import time
 
 load_dotenv()
@@ -19,16 +18,26 @@ logging.basicConfig(
 class Poll:
     def run(self):
         while True:
-            tasks_overdue = rtm.poll()
-            status = untangle.firewall_get_status()
-            if tasks_overdue:
+            status_obj = untangle.firewall_get_status()
+            status = status_obj['result']
+            logging.info(f"Firewall Status is {status}")
+            now  = datetime.now()
+            four_am = now.replace(hour=4, minute=0, second=0, microsecond=0)
+            ten_pm = now.replace(hour=22, minute=0, second=0, microsecond=0)
+            if now < four_am or now > ten_pm:
                 if status != 'RUNNING':
-                    logging.info('Sending START FIREWALL call')
+                    logging.info('Nighttime Sending START FIREWALL call')
                     untangle.firewall_start()
             else:
-                if status != 'INITIALIZED':
-                    logging.info('Sending Stop Firewall call')
-                    untangle.firewall_stop()
+                tasks_overdue = rtm.poll()
+                if tasks_overdue:
+                    if status != 'RUNNING':
+                        logging.info('Sending START FIREWALL call')
+                        untangle.firewall_start()
+                else:
+                    if status != 'INITIALIZED':
+                        logging.info('Sending Stop Firewall call')
+                        untangle.firewall_stop()
             time.sleep(30*60)
 
 poll = Poll()
