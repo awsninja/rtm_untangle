@@ -20,6 +20,8 @@ class RTM:
         overdue = False
         result = self.api.rtm.tasks.getList(filter=OVERDUE_TASK_FILTER)
         for tasklist in result.tasks:
-            overdue = True
+            for taskseries in tasklist:
+                if taskseries.task.completed == '':
+                    overdue = True
         return overdue
 
