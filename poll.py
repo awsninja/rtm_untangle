@@ -3,6 +3,7 @@ from untangle import Untangle
 from dotenv import load_dotenv
 import os
 import logging
+import pytz
 from sys import stdout
 from datetime import datetime
 import time
@@ -11,12 +12,6 @@ load_dotenv()
 
 untangle = Untangle()
 rtm = RTM()
-
-# logging.basicConfig(
-#     format='%(asctime)s %(levelname)-8s %(message)s',
-#     level=logging.INFO,
-#     datefmt='%Y-%m-%d %H:%M:%S'
-# )
 
 # Define logger
 logger = logging.getLogger('poll_logger')
@@ -28,15 +23,13 @@ consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
 consoleHandler.setFormatter(logFormatter)
 logger.addHandler(consoleHandler)
 
-
-
 class Poll:
     def run(self):
         while True:
             status_obj = untangle.firewall_get_status()
             status = status_obj['result']
             logger.info(f"Firewall Status is {status}")
-            now  = datetime.now()
+            now = datetime.now(pytz.timezone('America/New_York'))
             four_am = now.replace(hour=4, minute=0, second=0, microsecond=0)
             ten_pm = now.replace(hour=22, minute=0, second=0, microsecond=0)
             if now < four_am or now > ten_pm:

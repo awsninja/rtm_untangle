@@ -1,5 +1,6 @@
 httplib2==0.22.0
 pyparsing==3.0.9
 python-dotenv==1.0.0
+pytz==2023.3
 RtmAPI==0.7.2
 
