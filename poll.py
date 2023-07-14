@@ -13,6 +13,8 @@ load_dotenv()
 untangle = Untangle()
 rtm = RTM()
 
+POLL_INTERVAL = os.environ.get('POLL_INTERVAL')
+
 # Define logger
 logger = logging.getLogger('poll_logger')
 
@@ -46,8 +48,8 @@ class Poll:
                     if status != 'INITIALIZED':
                         logger.info('Sending Stop Firewall call')
                         untangle.firewall_stop()
-            logger.info(f"Sleeping for 30 minutes")
-            time.sleep(30*60)
+            logger.info(f"Sleeping for {POLL_INTERVAL} seconds")
+            time.sleep(int(POLL_INTERVAL))
 
 poll = Poll()
 poll.run()
