@@ -7,13 +7,15 @@ import pytz
 from sys import stdout
 from datetime import datetime
 import time
+import random
 
 load_dotenv()
 
 untangle = Untangle()
 rtm = RTM()
 
-POLL_INTERVAL = os.environ.get('POLL_INTERVAL')
+POLL_INTERVAL_MIN = os.environ.get('POLL_INTERVAL_MIN')
+POLL_INTERVAL_MAX = os.environ.get('POLL_INTERVAL_MAX')
 
 # Define logger
 logger = logging.getLogger('poll_logger')
@@ -48,8 +50,9 @@ class Poll:
                     if status != 'INITIALIZED':
                         logger.info('Sending Stop Firewall call')
                         untangle.firewall_stop()
-            logger.info(f"Sleeping for {POLL_INTERVAL} seconds")
-            time.sleep(int(POLL_INTERVAL))
+            sleep_for = random.randint(int(POLL_INTERVAL_MIN), int(POLL_INTERVAL_MAX))
+            logger.info(f"Sleeping for {sleep_for} seconds")
+            time.sleep(int(sleep_for))
 
 poll = Poll()
 poll.run()
