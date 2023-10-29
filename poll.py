@@ -5,7 +5,7 @@ import os
 import logging
 import pytz
 from sys import stdout
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import random
 
@@ -16,6 +16,8 @@ rtm = RTM()
 
 POLL_INTERVAL_MIN = os.environ.get('POLL_INTERVAL_MIN')
 POLL_INTERVAL_MAX = os.environ.get('POLL_INTERVAL_MAX')
+
+NTH_CHAOS_MONKEY = int(os.environ.get('NTH_CHAOS_MONKEY'))
 
 # Define logger
 logger = logging.getLogger('poll_logger')
@@ -33,10 +35,16 @@ class Poll:
             status_obj = untangle.firewall_get_status()
             status = status_obj['result']
             logger.info(f"Firewall Status is {status}")
+            chaos_monkey = random.randint(1, NTH_CHAOS_MONKEY) == 1          
             now = datetime.now(pytz.timezone('America/New_York'))
             four_am = now.replace(hour=4, minute=0, second=0, microsecond=0)
             ten_pm = now.replace(hour=22, minute=0, second=0, microsecond=0)
-            if now < four_am or now > ten_pm:
+
+            if chaos_monkey:
+                if status != 'RUNNING':
+                    logger.info('Chaos Monkey Sending START FIREWALL call')
+                    untangle.firewall_start()
+            elif now < four_am or now > ten_pm:
                 if status != 'RUNNING':
                     logger.info('Nighttime Sending START FIREWALL call')
                     untangle.firewall_start()
@@ -50,8 +58,11 @@ class Poll:
                     if status != 'INITIALIZED':
                         logger.info('Sending Stop Firewall call')
                         untangle.firewall_stop()
+
             sleep_for = random.randint(int(POLL_INTERVAL_MIN), int(POLL_INTERVAL_MAX))
-            logger.info(f"Sleeping for {sleep_for} seconds")
+            end_time = now + timedelta(0, sleep_for)
+            end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S,%f')
+            logger.info(f"Sleeping for {sleep_for} seconds ending {end_time_str}")
             time.sleep(int(sleep_for))
 
 poll = Poll()
