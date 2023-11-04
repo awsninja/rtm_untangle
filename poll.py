@@ -35,8 +35,11 @@ class Poll:
             status_obj = untangle.firewall_get_status()
             status = status_obj['result']
             logger.info(f"Firewall Status is {status}")
-            chaos_monkey = random.randint(1, NTH_CHAOS_MONKEY) == 1          
+            chaos_monkey = random.randint(1, NTH_CHAOS_MONKEY) == 1
+            if chaos_monkey:
+                logger.info("Chaos Monkey flag set to True")
             now = datetime.now(pytz.timezone('America/New_York'))
+
             four_am = now.replace(hour=4, minute=0, second=0, microsecond=0)
             ten_pm = now.replace(hour=22, minute=0, second=0, microsecond=0)
 
@@ -44,16 +47,23 @@ class Poll:
                 if status != 'RUNNING':
                     logger.info('Chaos Monkey Sending START FIREWALL call')
                     untangle.firewall_start()
+                else:
+                    logger.info('Chaos Monkey continuing')
             elif now < four_am or now > ten_pm:
                 if status != 'RUNNING':
                     logger.info('Nighttime Sending START FIREWALL call')
                     untangle.firewall_start()
+                else:
+                    logger.info('Nighttime mode continuing')
             else:
                 tasks_overdue = rtm.poll()
                 if tasks_overdue:
                     if status != 'RUNNING':
                         logger.info('Overdue Tasks Sending START FIREWALL call')
                         untangle.firewall_start()
+                    else:
+                        logger.info('Overdue mode continuing')
+
                 else:
                     if status != 'INITIALIZED':
                         logger.info('Sending Stop Firewall call')
