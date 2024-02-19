@@ -31,7 +31,14 @@ logger.addHandler(consoleHandler)
 
 class Poll:
     def run(self):
+        first_run = True
         while True:
+            if first_run:
+                logger.info("Forcing a Firewall Stop for the first iteration")
+                untangle.firewall_stop()
+                first_run = False
+                self.sleep()
+                continue
             status_obj = untangle.firewall_get_status()
             status = status_obj['result']
             logger.info(f"Firewall Status is {status}")
@@ -39,16 +46,15 @@ class Poll:
             if chaos_monkey:
                 logger.info("Chaos Monkey flag set to True")
             now = datetime.now(pytz.timezone('America/New_York'))
-
             four_am = now.replace(hour=4, minute=0, second=0, microsecond=0)
             ten_pm = now.replace(hour=22, minute=0, second=0, microsecond=0)
-
             if chaos_monkey:
                 if status != 'RUNNING':
                     logger.info('Chaos Monkey Sending START FIREWALL call')
                     untangle.firewall_start()
                 else:
-                    logger.info('Chaos Monkey continuing')
+                    logger.info('Chaos Monkey called for again. Overriding and turning off firewall.')
+                    untangle.firewall_stop()
             elif now < four_am or now > ten_pm:
                 if status != 'RUNNING':
                     logger.info('Nighttime Sending START FIREWALL call')
@@ -68,13 +74,18 @@ class Poll:
                     if status != 'INITIALIZED':
                         logger.info('Sending Stop Firewall call')
                         untangle.firewall_stop()
+            self.sleep()
 
-            sleep_for = random.randint(int(POLL_INTERVAL_MIN), int(POLL_INTERVAL_MAX))
-            end_time = now + timedelta(0, sleep_for)
-            end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S,%f')
-            logger.info(f"Sleeping for {sleep_for} seconds ending {end_time_str}")
-            time.sleep(int(sleep_for))
 
+    def sleep(self):
+        now = datetime.now(pytz.timezone('America/New_York'))
+        sleep_for = random.randint(int(POLL_INTERVAL_MIN), int(POLL_INTERVAL_MAX))
+        end_time = now + timedelta(0, sleep_for)
+        end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S,%f')
+        logger.info(f"Sleeping for {sleep_for} seconds ending {end_time_str}")
+        time.sleep(int(sleep_for))
+        
+            
 poll = Poll()
 poll.run()
 
