@@ -60,7 +60,7 @@ class Poll:
             ten_pm = now.replace(hour=22, minute=0, second=0, microsecond=0)
             if chaos_monkey:
                 if status != 'RUNNING':
-                    logger.info('Chaos Monkey Sending START FIREWALL call')
+                    logger.info('🙈🙈🙈 Chaos Monkey Sending START FIREWALL call')
                     self.start_firewall()
                 else:
                     logger.info('Chaos Monkey called for again. Overriding and turning off firewall.')
@@ -87,24 +87,26 @@ class Poll:
             self.sleep()
 
     def start_firewall(self):
-        pass
-        # untangle.firewall_start()
-        # time.sleep(2)
-        # for account in self.accounts:
-        #     self.execute_remote_command(
-        #         account['hostname'],
-        #         "root",
-        #         f"passwd -l {account['username']}"
-        #     )
-        #     self.execute_remote_command(
-        #         account['hostname'],
-        #         account['username'],
-        #         "xdg-screensaver lock"
-        #     )
+        untangle.firewall_start()
+        time.sleep(60)
+        for account in self.accounts:
+            logger.info("Locking workstation account for {account['username']}")
+            self.execute_remote_command(
+                account['hostname'],
+                "root",
+                f"passwd -l {account['username']}"
+            )
+            logger.info("Locking screen for {account['username']}")
+            self.execute_remote_command(
+                account['hostname'],
+                account['username'],
+                "xdg-screensaver lock"
+            )
 
         
     def stop_firewall(self):
         for account in self.accounts:
+            logger.info("Unocking workstation account for {account['username']}")
             self.execute_remote_command(
                 account['hostname'],
                 "root",
