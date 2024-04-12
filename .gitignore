@@ -1,2 +1,4 @@
 .env
 __pycache__/
+ssh_public_key
+ssh_private_key

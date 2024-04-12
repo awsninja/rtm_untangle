@@ -16,6 +16,8 @@ RUN  apt-get update \
 
 COPY ./.env ./
 COPY ./*.py ./
+COPY ./accounts.json ./
+COPY ./ssh_private_key ./
 COPY ./requirements.txt ./
 RUN mkdir scripts
 COPY ./scripts/* ./scripts/

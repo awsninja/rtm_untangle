@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 import os
 import logging
 import pytz
+import paramiko
+import json
+import sys
 from sys import stdout
 from datetime import datetime, timedelta
 import time
@@ -30,12 +33,19 @@ consoleHandler.setFormatter(logFormatter)
 logger.addHandler(consoleHandler)
 
 class Poll:
+
+    accounts = []
+    
     def run(self):
+        f = open("accounts.json")
+        json_obj = self.accounts = json.load(f)
+        self.accounts = json_obj['accounts']
+
         first_run = True
         while True:
             if first_run:
                 logger.info("Forcing a Firewall Stop for the first iteration")
-                untangle.firewall_stop()
+                # self.stop_firewall()
                 first_run = False
                 self.sleep()
                 continue
@@ -51,14 +61,14 @@ class Poll:
             if chaos_monkey:
                 if status != 'RUNNING':
                     logger.info('Chaos Monkey Sending START FIREWALL call')
-                    untangle.firewall_start()
+                    self.start_firewall()
                 else:
                     logger.info('Chaos Monkey called for again. Overriding and turning off firewall.')
-                    untangle.firewall_stop()
+                    self.stop_firewall()
             elif now < four_am or now > ten_pm:
                 if status != 'RUNNING':
                     logger.info('Nighttime Sending START FIREWALL call')
-                    untangle.firewall_start()
+                    self.start_firewall()
                 else:
                     logger.info('Nighttime mode continuing')
             else:
@@ -66,26 +76,60 @@ class Poll:
                 if tasks_overdue:
                     if status != 'RUNNING':
                         logger.info('Overdue Tasks Sending START FIREWALL call')
-                        untangle.firewall_start()
+                        self.start_firewall()
                     else:
                         logger.info('Overdue mode continuing')
 
                 else:
                     if status != 'INITIALIZED':
                         logger.info('Sending Stop Firewall call')
-                        untangle.firewall_stop()
+                        self.stop_firewall()
             self.sleep()
 
+    def start_firewall(self):
+        pass
+        # untangle.firewall_start()
+        # time.sleep(2)
+        # for account in self.accounts:
+        #     self.execute_remote_command(
+        #         account['hostname'],
+        #         "root",
+        #         f"passwd -l {account['username']}"
+        #     )
+        #     self.execute_remote_command(
+        #         account['hostname'],
+        #         account['username'],
+        #         "xdg-screensaver lock"
+        #     )
 
+        
+    def stop_firewall(self):
+        for account in self.accounts:
+            self.execute_remote_command(
+                account['hostname'],
+                "root",
+                f"passwd -u {account['username']}"
+            )
+        untangle.firewall_stop()
+
+            
     def sleep(self):
         now = datetime.now(pytz.timezone('America/New_York'))
         sleep_for = random.randint(int(POLL_INTERVAL_MIN), int(POLL_INTERVAL_MAX))
         end_time = now + timedelta(0, sleep_for)
         end_time_str = end_time.strftime('%Y-%m-%d %H:%M:%S,%f')
         logger.info(f"Sleeping for {sleep_for} seconds ending {end_time_str}")
-        time.sleep(int(sleep_for))
+        time.sleep(int(sleep_for)) 
+
         
-            
+    def execute_remote_command(self, host, username, command):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        k = paramiko.RSAKey.from_private_key_file("./ssh_private_key")
+        ssh.connect(host, username=username, pkey=k)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
+        ssh_stdin.close()
+   
 poll = Poll()
 poll.run()
 
