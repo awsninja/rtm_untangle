@@ -1,4 +1,4 @@
-from rtm import RTM
+gfrom rtm import RTM
 from untangle import Untangle
 from dotenv import load_dotenv
 import os
@@ -45,7 +45,7 @@ class Poll:
         while True:
             if first_run:
                 logger.info("Forcing a Firewall Stop for the first iteration")
-                # self.stop_firewall()
+                self.stop_firewall()
                 first_run = False
                 self.sleep()
                 continue
