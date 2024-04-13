@@ -90,7 +90,7 @@ class Poll:
         untangle.firewall_start()
         time.sleep(60)
         for account in self.accounts:
-            logger.info("Locking workstation account for {account['username']}")
+            logger.info(f"Locking workstation account for {account['username']}")
             self.execute_remote_command(
                 account['hostname'],
                 "root",
@@ -106,7 +106,7 @@ class Poll:
         
     def stop_firewall(self):
         for account in self.accounts:
-            logger.info("Unocking workstation account for {account['username']}")
+            logger.info(f"Unocking workstation account for {account['username']}")
             self.execute_remote_command(
                 account['hostname'],
                 "root",

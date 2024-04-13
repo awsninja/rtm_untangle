@@ -8,6 +8,7 @@ load_dotenv()
 
 UNTANGLE_FIREWALL_ID = os.environ.get('UNTANGLE_FIREWALL_ID')
 UNTANGLE_SERVER_ADDRESS = os.environ.get('UNTANGLE_SERVER_ADDRESS')
+UNTANGLE_PASSWORD = os.environ.get('UNTANGLE_PASSWORD')
 
 class Untangle:
 
@@ -41,7 +42,7 @@ class Untangle:
         conn = http.client.HTTPConnection(
             UNTANGLE_SERVER_ADDRESS,
         )
-        payload = 'username=admin&password=HuFOI.ku7m4w'
+        payload = f'username=admin&password={UNTANGLE_PASSWORD}'
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
