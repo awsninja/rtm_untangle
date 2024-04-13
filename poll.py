@@ -1,4 +1,4 @@
-gfrom rtm import RTM
+from rtm import RTM
 from untangle import Untangle
 from dotenv import load_dotenv
 import os
