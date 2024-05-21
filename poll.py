@@ -96,7 +96,7 @@ class Poll:
                 "root",
                 f"passwd -l {account['username']}"
             )
-            logger.info("Locking screen for {account['username']}")
+            logger.info(f"Locking screen for {account['username']}")
             self.execute_remote_command(
                 account['hostname'],
                 account['username'],
