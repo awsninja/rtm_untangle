@@ -128,9 +128,12 @@ class Poll:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         k = paramiko.RSAKey.from_private_key_file("./ssh_private_key")
-        ssh.connect(host, username=username, pkey=k)
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
-        ssh_stdin.close()
+        try:
+            ssh.connect(host, username=username, pkey=k)
+            ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
+            ssh_stdin.close()
+        except:
+            logger.info(f"Cound not connect via ssh to host {host}.")
    
 poll = Poll()
 poll.run()
