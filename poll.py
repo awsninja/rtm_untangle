@@ -106,7 +106,7 @@ class Poll:
         
     def stop_firewall(self):
         for account in self.accounts:
-            logger.info(f"Unocking workstation account for {account['username']}")
+            logger.info(f"Unlocking workstation account for {account['username']}")
             self.execute_remote_command(
                 account['hostname'],
                 "root",
@@ -131,6 +131,8 @@ class Poll:
         try:
             ssh.connect(host, username=username, pkey=k)
             ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
+            logger.info(ssh_stdout.read())
+            logger.info(ssh_stderr.read())
             ssh_stdin.close()
         except:
             logger.info(f"Cound not connect via ssh to host {host}.")
