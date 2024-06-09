@@ -8,5 +8,11 @@
 	    "hostname": "charpc",
 	    "username": "charlotte"
 	}
+    ],
+    "productivity_accounts": [
+	{
+	    "hostname": "192.168.2.26",
+	    "username": "jaymuntz"
+	}
     ]
 }
