@@ -44,7 +44,7 @@ class SelfRoutine:
             )
         
     def stop_productivity_mode(self):
-        logger.info("Stoping producivity mode")
+        logger.info("Stopping producivity mode")
         for account in self.accounts:
             execute_remote_command(
                 account['hostname'],
