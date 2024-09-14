@@ -1,17 +1,17 @@
 {
     "accounts": [
 	{
-	    "hostname": "mommy",
+	    "hostname": "mommy.jaymuntz.com",
 	    "username": "theo"
 	},
 	{
-	    "hostname": "charpc",
+	    "hostname": "charpc.jaymuntz.com",
 	    "username": "charlotte"
 	}
     ],
     "productivity_accounts": [
 	{
-	    "hostname": "192.168.2.26",
+	    "hostname": "jayperstation.jaymuntz.com",
 	    "username": "jaymuntz"
 	}
     ]

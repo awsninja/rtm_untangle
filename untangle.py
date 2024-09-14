@@ -17,25 +17,32 @@ class Untangle:
     
     request_id = 1
 
+    status = "INITIALIZED"
+    
     def firewall_start(self):
-        payload = {
-            'method': f".obj#{UNTANGLE_FIREWALL_ID}.start",
-        }
-        return self.__request(payload)
+        self.status = "RUNNING"
+        # payload = {
+        #     'method': f".obj#{UNTANGLE_FIREWALL_ID}.start",
+        # }
+        # return self.__request(payload)
 
     def firewall_stop(self):
-        payload = {
-            'method': f".obj#{UNTANGLE_FIREWALL_ID}.stop",
-        }
-        return self.__request(payload)
+        self.status = "INITIALIZED"
+        # payload = {
+        #     'method': f".obj#{UNTANGLE_FIREWALL_ID}.stop",
+        # }
+        # return self.__request(payload)
 
         
     def firewall_get_status(self):
-        payload = {
-            'method': f".obj#{UNTANGLE_FIREWALL_ID}.getRunState",
+        return {
+            "result": self.status,
         }
-        res = self.__request(payload)
-        return res
+        # payload = {
+        #     'method': f".obj#{UNTANGLE_FIREWALL_ID}.getRunState",
+        # }
+        # res = self.__request(payload)
+        # return res
 
     
     def __authenticate(self):

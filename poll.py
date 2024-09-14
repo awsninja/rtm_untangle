@@ -24,7 +24,7 @@ self_routine = SelfRoutine()
 POLL_INTERVAL_MIN = os.environ.get('POLL_INTERVAL_MIN')
 POLL_INTERVAL_MAX = os.environ.get('POLL_INTERVAL_MAX')
 
-NTH_CHAOS_MONKEY = int(os.environ.get('NTH_CHAOS_MONKEY'))
+NTH_CHAOS_MONKEY = int(str(os.environ.get('NTH_CHAOS_MONKEY')))
 
 # Define logger
 logger = logging.getLogger('poll_logger')
