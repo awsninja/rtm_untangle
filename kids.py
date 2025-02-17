@@ -90,6 +90,11 @@ class KidsRoutine:
                 account['username'],
                 "xdg-screensaver lock"
             )
+            execute_remote_command(
+                account['hostname'],
+                "root",
+                f"pkill -9 -u {account['username']}"
+            )
 
     def stop_firewall(self):
         for account in self.accounts:
