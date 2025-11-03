@@ -2,11 +2,11 @@
     "accounts": [
 	{
 	    "hostname": "mommy.jaymuntz.com",
-	    "username": "theo"
-	},
+	    "username": "theo"	}
+,
 	{
-	    "hostname": "charpc.jaymuntz.com",
-	    "username": "charlotte"
+	    "hostname": "charpc2",
+	    "username": "char"
 	}
     ],
     "productivity_accounts": [
