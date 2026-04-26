@@ -2,11 +2,20 @@
     "accounts": [
 	{
 	    "hostname": "mommy.jaymuntz.com",
-	    "username": "theo"	}
-,
+	    "username": "theo",
+	    "macs": [
+		{"name": "Mommy2", "mac": "a4:34:d9:09:a8:35"},
+		{"name": "Mommy1", "mac": "40:8d:5c:56:dc:eb"},
+		{"name": "TheoIPod", "mac": "ec:ce:d7:08:ed:a7"}
+	    ]
+	},
 	{
-	    "hostname": "charpc2",
-	    "username": "char"
+	    "hostname": "charpc.jaymuntz.com",
+	    "username": "charlotte",
+	    "macs": [
+		{"name": "CharIpod", "mac": "ae:89:2c:ea:04:ff"},
+		{"name": "CharPc", "mac": "78:55:36:03:53:87"}
+	    ]
 	}
     ],
     "productivity_accounts": [

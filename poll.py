@@ -5,7 +5,6 @@ import pytz
 import json
 
 from rtm import RTM
-from untangle import Untangle
 from kids import KidsRoutine
 from self_routine import SelfRoutine
 from dotenv import load_dotenv
@@ -16,7 +15,6 @@ import random
 
 load_dotenv()
 
-untangle = Untangle()
 rtm = RTM()
 kids = KidsRoutine()
 self_routine = SelfRoutine()

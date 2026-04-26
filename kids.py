@@ -1,4 +1,4 @@
-from untangle import Untangle
+from unifi import Unifi
 from rtm import RTM
 from dotenv import load_dotenv
 from datetime import datetime
@@ -16,7 +16,6 @@ load_dotenv()
 
 NTH_CHAOS_MONKEY = int(os.environ.get('NTH_CHAOS_MONKEY'))
 SLEEP_BEFORE_LOCKOUT = int(os.environ.get('SLEEP_BEFORE_LOCKOUT', 60))
-untangle = Untangle()
 rtm = RTM()
 # Define logger
 logger = logging.getLogger('kids_routine')
@@ -33,12 +32,14 @@ class KidsRoutine:
 
     def __init__(self):
         f = open("accounts.json")
-        json_obj = self.accounts = json.load(f)
+        json_obj = json.load(f)
         self.accounts = json_obj['accounts']
+        macs = [entry['mac'] for account in self.accounts for entry in account.get('macs', [])]
+        self.unifi = Unifi(macs)
 
 
     def kids_routine(self):
-        status_obj = untangle.firewall_get_status()
+        status_obj = self.unifi.firewall_get_status()
         status = status_obj['result']
         logger.info(f"Firewall Status is {status}")
         chaos_monkey = random.randint(1, NTH_CHAOS_MONKEY) == 1
@@ -75,34 +76,8 @@ class KidsRoutine:
                     self.stop_firewall()
 
     def start_firewall(self):
-        untangle.firewall_start()
-        time.sleep(SLEEP_BEFORE_LOCKOUT)
-        for account in self.accounts:
-            logger.info(f"Locking workstation account for {account['username']}")
-            execute_remote_command(
-                account['hostname'],
-                "root",
-                f"passwd -l {account['username']}"
-            )
-            logger.info(f"Locking screen for {account['username']}")
-            execute_remote_command(
-                account['hostname'],
-                account['username'],
-                "xdg-screensaver lock"
-            )
-            execute_remote_command(
-                account['hostname'],
-                "root",
-                f"pkill -9 -u {account['username']}"
-            )
+        self.unifi.firewall_start()
 
     def stop_firewall(self):
-        for account in self.accounts:
-            logger.info(f"Unlocking workstation account for {account['username']}")
-            execute_remote_command(
-                account['hostname'],
-                "root",
-                f"passwd -u {account['username']}"
-            )
-        untangle.firewall_stop()
+        self.unifi.firewall_stop()
     

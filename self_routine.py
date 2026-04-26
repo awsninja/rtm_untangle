@@ -36,20 +36,20 @@ class SelfRoutine:
 
     def start_productivity_mode(self):
         logger.info("Starting productivity mode")
-        for account in self.accounts:
-            execute_remote_command(
-                account['hostname'],
-                "root",
-                "./productivity_on"
-            )
+#         for account in self.accounts:
+            # execute_remote_command(
+            #     account['hostname'],
+            #     "root",
+            #     "./productivity_on"
+            # )
         
     def stop_productivity_mode(self):
         logger.info("Stopping producivity mode")
-        for account in self.accounts:
-            execute_remote_command(
-                account['hostname'],
-                "root",
-                "./productivity_off"
-            )
+#         for account in self.accounts:
+            # execute_remote_command(
+            #     account['hostname'],
+            #     "root",
+            #     "./productivity_off"
+            # )
 
         
