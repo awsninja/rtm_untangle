@@ -11,3 +11,4 @@ python-dotenv==1.0.0
 pytz==2023.3
 RtmAPI==0.7.2
 httplib2
+flask

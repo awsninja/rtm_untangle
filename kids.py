@@ -3,6 +3,7 @@ from rtm import RTM
 from dotenv import load_dotenv
 from datetime import datetime
 from ssh import execute_remote_command
+from state import manual_lock
 from sys import stdout
 
 import logging
@@ -42,6 +43,13 @@ class KidsRoutine:
         status_obj = self.unifi.firewall_get_status()
         status = status_obj['result']
         logger.info(f"Firewall Status is {status}")
+
+        if manual_lock.is_active():
+            logger.info(f"Manual lock active until {manual_lock.expires_at()}")
+            if status != 'RUNNING':
+                self.start_firewall()
+            return
+
         chaos_monkey = random.randint(1, NTH_CHAOS_MONKEY) == 1
         if chaos_monkey:
             logger.info("Chaos Monkey flag set to True")
