@@ -14,7 +14,8 @@
 	    "username": "charlotte",
 	    "macs": [
 		{"name": "CharIpod", "mac": "ae:89:2c:ea:04:ff"},
-		{"name": "CharPc", "mac": "78:55:36:03:53:87"}
+		{"name": "CharPc", "mac": "78:55:36:03:53:87"},
+		{"name": "CharIpad", "mac": "62:79:c5:28:46:b3"}
 	    ]
 	}
     ],
