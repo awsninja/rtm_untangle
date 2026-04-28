@@ -4,6 +4,12 @@ from state import manual_lock
 
 app = Flask(__name__)
 API_KEY = os.environ.get('API_KEY', '')
+_kids = None
+
+
+def init_app(kids_routine):
+    global _kids
+    _kids = kids_routine
 
 
 def _authorized():
@@ -18,6 +24,8 @@ def lock():
         return jsonify({'error': 'unauthorized'}), 401
     minutes = int(request.args.get('minutes', 60))
     manual_lock.lock(minutes)
+    if _kids:
+        _kids.start_firewall()
     expires = manual_lock.expires_at()
     return jsonify({'status': 'locked', 'minutes': minutes, 'expires_at': str(expires)})
 
@@ -27,6 +35,8 @@ def unlock():
     if not _authorized():
         return jsonify({'error': 'unauthorized'}), 401
     manual_lock.unlock()
+    if _kids:
+        _kids.stop_firewall()
     return jsonify({'status': 'unlocked'})
 
 

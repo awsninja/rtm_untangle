@@ -8,7 +8,7 @@ import threading
 from rtm import RTM
 from kids import KidsRoutine
 from self_routine import SelfRoutine
-from api import app as flask_app
+from api import app as flask_app, init_app
 from dotenv import load_dotenv
 from sys import stdout
 from datetime import datetime, timedelta
@@ -20,6 +20,7 @@ load_dotenv()
 rtm = RTM()
 kids = KidsRoutine()
 self_routine = SelfRoutine()
+init_app(kids)
 
 threading.Thread(
     target=lambda: flask_app.run(host='0.0.0.0', port=5000, use_reloader=False),
