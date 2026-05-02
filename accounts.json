@@ -6,7 +6,8 @@
 	    "macs": [
 		{"name": "Mommy2", "mac": "a4:34:d9:09:a8:35"},
 		{"name": "Mommy1", "mac": "40:8d:5c:56:dc:eb"},
-		{"name": "TheoIPod", "mac": "ec:ce:d7:08:ed:a7"}
+		{"name": "TheoIPod", "mac": "ec:ce:d7:08:ed:a7"},
+		{"name": "Steamdeck", "mac": "cc:47:40:60:86:95"}
 	    ]
 	},
 	{
