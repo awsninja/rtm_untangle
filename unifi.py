@@ -50,10 +50,10 @@ class Unifi:
         for attempt in range(1, MAX_RETRIES + 1):
             try:
                 if action == 'block':
-                    self.controller.block_client(mac)
+                    result = self.controller.block_client(mac)
                 else:
-                    self.controller.unblock_client(mac)
-                logger.info(f"{action} {mac} succeeded")
+                    result = self.controller.unblock_client(mac)
+                logger.info(f"{action} {mac} succeeded (response: {result})")
                 return True
             except Exception as e:
                 logger.warning(f"{action} {mac} attempt {attempt}/{MAX_RETRIES} failed: {e}")
@@ -65,8 +65,10 @@ class Unifi:
 
     def _get_blocked_macs(self):
         try:
-            clients = self.controller.get_all_clients()
-            return {c['mac'].lower() for c in clients if c.get('blocked')}
+            clients = self.controller.get_users()
+            blocked = {c['mac'].lower() for c in clients if c.get('blocked')}
+            logger.info(f"Blocked MACs per controller: {blocked or 'none'}")
+            return blocked
         except Exception as e:
             logger.warning(f"Could not query blocked client list: {e}")
             return None
