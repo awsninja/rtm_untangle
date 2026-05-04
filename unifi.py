@@ -53,6 +53,8 @@ class Unifi:
                     result = self.controller.block_client(mac)
                 else:
                     result = self.controller.unblock_client(mac)
+                if isinstance(result, dict) and 'error' in result:
+                    raise Exception(f"controller error: {result['error']}")
                 logger.info(f"{action} {mac} succeeded (response: {result})")
                 return True
             except Exception as e:
@@ -74,6 +76,7 @@ class Unifi:
             return None
 
     def firewall_start(self):
+        self.controller = self._connect()
         failed = []
         for mac in self.macs:
             if not self._apply('block', mac):
@@ -86,6 +89,7 @@ class Unifi:
         self.status = "RUNNING"
 
     def firewall_stop(self):
+        self.controller = self._connect()
         failed = []
         for mac in self.macs:
             if not self._apply('unblock', mac):
