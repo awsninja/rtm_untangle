@@ -63,6 +63,14 @@ class Unifi:
         logger.error(f"{action} {mac} FAILED after {MAX_RETRIES} attempts")
         return False
 
+    def _get_blocked_macs(self):
+        try:
+            clients = self.controller.get_all_clients()
+            return {c['mac'].lower() for c in clients if c.get('blocked')}
+        except Exception as e:
+            logger.warning(f"Could not query blocked client list: {e}")
+            return None
+
     def firewall_start(self):
         failed = []
         for mac in self.macs:
@@ -72,6 +80,7 @@ class Unifi:
             logger.error(f"firewall_start incomplete — failed MACs: {failed}")
         else:
             logger.info("firewall_start complete — all MACs blocked")
+        self._verify('block')
         self.status = "RUNNING"
 
     def firewall_stop(self):
@@ -83,7 +92,25 @@ class Unifi:
             logger.error(f"firewall_stop incomplete — failed MACs: {failed}")
         else:
             logger.info("firewall_stop complete — all MACs unblocked")
+        self._verify('unblock')
         self.status = "INITIALIZED"
+
+    def _verify(self, action):
+        blocked = self._get_blocked_macs()
+        if blocked is None:
+            logger.warning("_verify: could not confirm — blocked client query failed")
+            return
+        expected_blocked = action == 'block'
+        mismatched = []
+        for mac in self.macs:
+            is_blocked = mac.lower() in blocked
+            if is_blocked != expected_blocked:
+                mismatched.append(mac)
+        if mismatched:
+            state = "unblocked" if expected_blocked else "still blocked"
+            logger.error(f"_verify FAILED after {action}: {state} MACs: {mismatched}")
+        else:
+            logger.info(f"_verify OK after {action}: controller state matches intent")
 
     def firewall_get_status(self):
         return {
