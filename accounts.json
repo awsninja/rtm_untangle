@@ -8,7 +8,8 @@
 		{"name": "Mommy1", "mac": "40:8d:5c:56:dc:eb"},
 		{"name": "TheoIPod", "mac": "ec:ce:d7:08:ed:a7"},
 		{"name": "TheoOtherIpoid", "mac": "12:59:e2:a5:9e:f3"},
-		{"name": "Steamdeck", "mac": "cc:47:40:60:86:95"}
+		{"name": "Steamdeck", "mac": "cc:47:40:60:86:95"},
+		{"name": "FireTv", "mac": "74:a7:ea:4d:5e:34"}
 	    ]
 	},
 	{
