@@ -4,8 +4,7 @@
 	    "hostname": "mommy.jaymuntz.com",
 	    "username": "theo",
 	    "macs": [
-		{"name": "Mommy2", "mac": "a4:34:d9:09:a8:35"},
-		{"name": "Mommy1", "mac": "40:8d:5c:56:dc:eb"},
+		{"name": "Mommy2", "mac": "78:55:36:05:f8:28"},
 		{"name": "TheoIPod", "mac": "ec:ce:d7:08:ed:a7"},
 		{"name": "TheoOtherIpoid", "mac": "12:59:e2:a5:9e:f3"},
 		{"name": "Steamdeck", "mac": "cc:47:40:60:86:95"}
